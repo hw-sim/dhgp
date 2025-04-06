@@ -139,9 +139,9 @@ class Louvain {
   }
 
 
-  Graph getGraph() {
-    return _graph_hierarchy[0];
-  }
+  // Graph getGraph() {
+  //   return _graph_hierarchy[0];
+  // }
 
   ClusterID clusterID(const NodeID node) const {
     return _graph_hierarchy[0].clusterID(node);

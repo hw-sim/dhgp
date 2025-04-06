@@ -100,25 +100,20 @@ if(KAHYPAR_USE_GCOV)
 endif(KAHYPAR_USE_GCOV)
 
 if(KAHYPAR_USE_MINIMAL_BOOST)
-  include(ExternalProject)
-  ExternalProject_Add(boost
-    URL
-    http://downloads.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.tar.bz2
-    #URL_MD5 6095876341956f65f9d35939ccea1a9f
-    DOWNLOAD_DIR /tmp/
-    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/external_tools/boost
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND "")
+  include(FetchContent)
+  FetchContent_Populate(
+    boost-src
+    URL http://downloads.sourceforge.net/project/boost/boost/1.69.0/boost_1_69_0.tar.bz2
+    URL_HASH MD5=a1332494397bf48332cb152abfefcec2
+    SOURCE_DIR external_tools/boost
+  )
+  file(GLOB MINI_BOOST_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/external_tools/boost/libs/program_options/src/*.cpp)
 
-  include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/external_tools/boost/src/boost/)
-
-  # glob boost sources
-  file(GLOB MINI_BOOST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/external_tools/boost/src/boost/libs/program_options/src/*.cpp)
-
-  add_library(mini_boost STATIC ${MINI_BOOST_SOURCES} kahypar/partition/coarsening/external_coarsener.h kahypar/partition/coarsening/acyclic_cluster_coarsening_v2.h)
+  add_library(mini_boost STATIC ${MINI_BOOST_SOURCES})
   set_target_properties(mini_boost PROPERTIES LINKER_LANGUAGE CXX)
   set(Boost_LIBRARIES mini_boost)
+  set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/external_tools/boost/boost/)
+  include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 else()
   set(BOOST_MIN_VERSION "1.48.0")
   find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS program_options REQUIRED)

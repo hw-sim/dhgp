@@ -724,7 +724,9 @@ po::options_description createGenericOptionsDescription(Context& context,
     "Time limit in seconds")
     ("sp-process,s", po::value<bool>(&context.partition.sp_process_output)->value_name("<bool>"),
     "Summarize partitioning results in RESULT line compatible with sqlplottools "
-    "(https://github.com/bingmann/sqlplottools)");
+    "(https://github.com/bingmann/sqlplottools)")
+    ("write-partition-filename,W", po::value<std::string>(&context.partition.write_partition_filename)->value_name("<string>"),
+    "Write partition file to given filename");
   return generic_options;
 }
 
